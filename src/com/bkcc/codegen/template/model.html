@@ -1,0 +1,135 @@
+<#import "function.ftl" as func>
+<#assign path=model.variables.path>
+<#assign package=model.variables.package>
+<#assign class=model.variables.class>
+<#assign comment=model.tabComment>
+<#assign class=model.variables.class>
+<#assign comment=model.tabComment>
+<#assign classVar=model.variables.class?lower_case>
+<#assign classVar=model.variables.classVar>
+<#assign commonList=model.commonList>
+<#assign pkModel=model.pkModel>
+<#assign pk=func.getPk(model) >
+<#assign pkVar=func.convertUnderLine(pk) >
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<th:block th:include="onload_js :: head"></th:block>
+</head>
+<script>
+var gridArea = {
+	    xtype: 'gridArea',
+	    url:'/${path}/${package}/list.ht',
+		del:'/${path}/${package}/del.ht',
+	    search: {
+	        fields: [
+				<#list commonList as col>
+				<#assign colName=func.convertUnderLine(col.columnName)>
+				 <#if (colName!="version" && colName!="createuser" && colName!="createtime" && colName!="updateuser" && colName!="updatetime")>
+				 	<#if (col.colType=="java.util.Date")>
+				 	{ label: '${col.comment}', name: '${colName}', xtype: 'datebox'},
+					  <#else>
+				 	{ label: '${col.comment}', name: '${colName}', xtype: 'textbox'},
+					</#if>
+				 	</#if>
+				 	</#list>
+	        ]
+	    },
+	    columns: [[
+	        { field: '${pkVar}', checkbox: true },
+	        
+	        <#list model.commonList as col>
+			 <#assign colName=func.convertUnderLine(col.columnName)>
+			 <#if (col.colType=="java.util.Date")>
+			 { field: '${colName}', title: '${col.getComment()}', width: 100 ,formatter:DateUtil.formatDate},
+			   <#else>
+			 	{ field: '${colName}', title: '${col.getComment()}', width: 100 },
+			 </#if>
+			   </#list>
+	    ]],
+	    buttons:[
+			{text: '新增',iconCls: 'icon-add',onClick: function (e) { 
+				page2.showView();
+				formArea.clear();
+				formArea.edit();
+			}}, 
+			{text: '修改',iconCls: 'icon-edit',onClick: function () {
+	     		var rowData = gridArea.datagrid('getSelected');
+	     		if (!rowData){
+	         		$.alert.info('请选中一条记录');
+	         		return;
+	     		}
+	     		page2.showView();
+	     		formArea.edit().loadData({${pkVar}:rowData.${pkVar}});
+	     	}}, 
+	     	'-', 
+	     	{text: '删除',iconCls: 'icon-remove', onClick: function () {
+	     		gridArea.delData('${pkVar}',function(){
+	     			gridArea.loadData();
+	     		});
+	     	}}
+	    ],
+	    onDblClickRow : function (rowIndex, rowData) {
+	    	page2.showView();
+	    	formArea.view().loadData({${pkVar}:rowData.${pkVar}});
+		}
+	}
+
+	var formArea = {
+	        xtype: "formArea",
+	        get:'/${path}/${package}/get.ht',
+	    	save:'/${path}/${package}/save.ht',
+	        //height: 117,
+	        title: "基础信息",
+	        fields: [
+				{ label: "", xtype: "hiddenbox", name: "${pkVar}"},
+				<#list model.commonList as col>
+				<#assign colName=func.convertUnderLine(col.columnName)>
+				 <#if (colName!="version" && colName!="createuser" && colName!="createtime" && colName!="updateuser" && colName!="updatetime")>
+				<#if (col.colType=="java.util.Date")>
+				{ label: "${col.getComment()}", xtype: "datebox", name: "${colName}"},
+				  <#else>
+				{ label: "${col.getComment()}", xtype: "textbox", name: "${colName}"},
+				</#if>
+				</#if>
+				  </#list>
+	        ],
+	        buttons: [
+	        	{ text: "编辑", iconCls: "icon-edit", onClick: function () {
+					formArea.edit();
+				}},
+				{ text: "保存", iconCls: "icon-save", onClick: function () {
+					formArea.submit(function(){
+						formArea.view();
+					});
+				}},
+	        	{ text: "返回", iconCls: "icon-back",onClick: function () {
+	        		page1.showView(); 
+	        		gridArea.loadData();
+	        	}
+	        }]
+	    }
+var page1 = {
+	    xtype: 'viewArea',
+	    region: {
+	        center: gridArea
+	    }
+	}
+var page2 = {
+	    xtype: 'viewArea',
+	    region: {
+	    	center: formArea
+	    }
+	}
+var viewport = {
+		xtype: "viewport",
+		items: [page1, page2]
+}
+$(function () {
+	$.appInit(viewport);
+})
+</script>
+<body>
+</body>
+</html>

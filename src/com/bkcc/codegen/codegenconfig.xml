@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="codegen.xsd">
+    <variables>
+        <variable name="developer" value="mapper"/>
+        <variable name="company" value="长城新媒体"/>
+    </variables>
+
+    <templates>
+        <template id="mapper" path="mapper.ftl"/>
+        <template id="model" path="model.ftl"/>
+        <template id="dao" path="dao.ftl"/>
+        <template id="service" path="service.ftl"/>
+        <template id="controller" path="controller.ftl"/>
+        <template id="html" path="model.html"/>
+    </templates>
+
+    <files baseDir="E:\codes\hebei\app">
+        <file refTemplate="mapper" filename="{class}.map.xml" dir="src\main\java\com\hebei\{path}\{package}\data" />
+        <file refTemplate="model" filename="{class}.java" dir="src\main\java\com\hebei\{path}\{package}\data" />
+        <file refTemplate="dao" filename="{class}Dao.java" dir="src\main\java\com\hebei\{path}\{package}" />
+        <file refTemplate="service" filename="{class}Service.java" dir="src\main\java\com\hebei\{path}\{package}" />
+        <file refTemplate="controller" filename="{class}Controller.java" dir="src\main\java\com\hebei\{path}\{package}"/>
+    </files>
+
+    <table tableName="volunteer_order">
+        <variable name="class" value="VolunteerOrder"/>
+        <variable name="classVar" value="order"/>
+        <variable name="package" value="order"/>
+        <variable name="path" value="zydd"/>
+    </table>
+
+</config>
