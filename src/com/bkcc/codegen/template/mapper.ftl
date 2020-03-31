@@ -43,8 +43,8 @@
 			<#else>
 			<#if (col.colType=="java.util.Date")>
 			<if test="${colName} != null"> AND ${tableName}.${col.columnName}  =<#noparse>#{</#noparse>${colName}} </if>
-			<if test="${colName} != null"> AND ${tableName}.${col.columnName}  >=<#noparse>#{</#noparse>begin${colName},jdbcType=DATE} </if>
-			<if test="${colName} != null"> AND ${tableName}.${col.columnName} <![CDATA[ <=<#noparse>#{</#noparse>end${colName},jdbcType=DATE}]]> </if>
+			<if test="begin${colName} != null"> AND begin${tableName}.${col.columnName}  >=<#noparse>#{</#noparse>begin${colName},jdbcType=TIMESTAMP} </if>
+			<if test="end${colName} != null"> AND end${tableName}.${col.columnName} <![CDATA[ <=<#noparse>#{</#noparse>end${colName},jdbcType=TIMESTAMP}]]> </if>
 			<#else>
 			<if test="${colName} != null"> AND ${tableName}.${col.columnName}  =<#noparse>#{</#noparse>${colName}} </if>
 			</#if>
