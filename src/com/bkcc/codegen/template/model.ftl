@@ -29,6 +29,12 @@ import com.hebei.core.model.BaseModel;
 public class ${class} extends BaseModel {
 	private static final long serialVersionUID = 1L;
 <#list model.columnList as col>
+
+    <#if ("${func.convertUnderLine(col.columnName)}" == "updateBy")>
+    <#elseif ("${func.convertUnderLine(col.columnName)}" == "createBy")>
+    <#elseif ("${func.convertUnderLine(col.columnName)}" == "updateTime")>
+    <#elseif ("${func.convertUnderLine(col.columnName)}" == "createTime")>
+    <#else>
 	/**
 	 * ${col.comment}
 	 */
@@ -41,16 +47,17 @@ public class ${class} extends BaseModel {
 	/**
 	 * 开始 ${col.comment}
 	 */
-	@ApiModelProperty(value="开始${col.comment}",name="begin${func.convertUnderLine(col.columnName)}")
+	@ApiModelProperty(value="开始${col.comment}",name="begin${func.convertUnderLine(col.columnName)}", hidden=true)
 	protected java.util.Date  begin${func.convertUnderLine(col.columnName)};
 	/**
 	 * 结束  ${col.comment}
 	 */
-	@ApiModelProperty(value="结束${col.comment}",name="end${func.convertUnderLine(col.columnName)}")
+	@ApiModelProperty(value="结束${col.comment}",name="end${func.convertUnderLine(col.columnName)}", hidden=true)
 	protected java.util.Date  end${func.convertUnderLine(col.columnName)};	
 			<#else>
 	protected ${col.colType}  ${func.convertUnderLine(col.columnName)};
 			</#if> 
+	</#if>
 	</#if>
 </#list>
 

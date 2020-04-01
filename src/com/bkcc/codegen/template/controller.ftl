@@ -47,13 +47,13 @@ public class ${class}Controller extends BaseController {
 		return ${classVar}Service.getAll(PageBean, ${classVar});
 	}
 
-    @ApiOperation(value = "根据主键查询")
+    @ApiOperation(value = "根据主键查询详情")
 	@GetMapping()
     public ResultView get(Long ${pkVar}) {
     	return ResultView.ok(${classVar}Service.getById(${pkVar}));
     }
 
-	@ApiOperation(value = "保存")
+	@ApiOperation(value = "保存/更新")
 	@PostMapping()
 	public  ResultView save(${class} ${classVar}) {
 		ResultView ResultView=new ResultView(); 

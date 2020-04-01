@@ -24,7 +24,9 @@
 		<#assign colName=func.convertUnderLine(col.columnName)>
 		<#if (col.isPK) >
 		<id property="${colName}" column="${col.columnName}" jdbcType="${func.getJdbcType(col.colDbType)}"/>
-		<#else>
+        <#elseif (col.colType=="java.util.Date") >
+        <result property="${colName}" column="${col.columnName}" jdbcType="TIMESTAMP"/>
+        <#else>
 		<result property="${colName}" column="${col.columnName}" jdbcType="${func.getJdbcType(col.colDbType)}"/>
 		</#if>
 		</#list>
