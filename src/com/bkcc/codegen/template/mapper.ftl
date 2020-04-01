@@ -45,8 +45,8 @@
 			<#else>
 			<#if (col.colType=="java.util.Date")>
 			<if test="${colName} != null"> AND ${tableName}.${col.columnName}  =<#noparse>#{</#noparse>${colName}} </if>
-			<if test="begin${colName} != null"> AND begin${tableName}.${col.columnName}  >=<#noparse>#{</#noparse>begin${colName},jdbcType=TIMESTAMP} </if>
-			<if test="end${colName} != null"> AND end${tableName}.${col.columnName} <![CDATA[ <=<#noparse>#{</#noparse>end${colName},jdbcType=TIMESTAMP}]]> </if>
+			<if test="begin${colName} != null"> AND ${tableName}${col.columnName}  >=<#noparse>#{</#noparse>begin${colName},jdbcType=TIMESTAMP} </if>
+			<if test="end${colName} != null"> AND ${tableName}${col.columnName} <![CDATA[ <=<#noparse>#{</#noparse>end${colName},jdbcType=TIMESTAMP}]]> </if>
 			<#else>
 			<if test="${colName} != null"> AND ${tableName}.${col.columnName}  =<#noparse>#{</#noparse>${colName}} </if>
 			</#if>
@@ -59,7 +59,14 @@
 		INSERT INTO ${tableName}
 		(<#list colList as col>${col.columnName}<#if col_has_next>,</#if></#list>)
 		VALUES
-		(<#list colList as col><#assign colName=func.convertUnderLine(col.columnName)><#noparse>#{</#noparse>${colName},jdbcType=${func.getJdbcType(col.colDbType)}<#noparse>}</#noparse><#if col_has_next>, </#if></#list>)
+		(<#list colList as col>
+		<#assign colName=func.convertUnderLine(col.columnName)>
+		<#if (col.colType=="java.util.Date")>
+		<#noparse>#{</#noparse>${colName},jdbcType=TIMESTAMP<#noparse>}</#noparse><#if col_has_next>, </#if>
+		<#else>
+		<#noparse>#{</#noparse>${colName},jdbcType=${func.getJdbcType(col.colDbType)}<#noparse>}</#noparse><#if col_has_next>, </#if>
+		</#if>
+		</#list>)
 	</insert>
 	
 	<delete id="delById" parameterType="java.lang.Long">
@@ -70,13 +77,20 @@
 	
 	<update id="update" parameterType="${type}">
 		UPDATE ${tableName} SET
-		<if test="${pk} != null"> ${tableName}.${pk}  =<#noparse>#{</#noparse>${pk}} </if>
 		<#list commonList as col>
 		<#assign colName=func.convertUnderLine(col.columnName)>
-		,${tableName}.${col.columnName}=<#noparse>#{</#noparse>${colName},jdbcType=${func.getJdbcType(col.colDbType)}<#noparse>}</#noparse><#if col_has_next></#if>
+        <#if (col.columnName == "create_time")>
+        <#elseif (col.columnName == "create_by")>
+        <#else>
+        <#if (col.colType=="java.util.Date")>
+		${tableName}.${col.columnName}=<#noparse>#{</#noparse>${colName},jdbcType=TIMESTAMP<#noparse>}</#noparse> <#if col_has_next>,</#if>
+        <#else>
+		${tableName}.${col.columnName}=<#noparse>#{</#noparse>${colName},jdbcType=${func.getJdbcType(col.colDbType)}<#noparse>}</#noparse><#if col_has_next>,</#if>
+		</#if>
+		</#if>
 		</#list>
 		WHERE
-		${pk}=<#noparse>#{</#noparse>${func.convertUnderLine(pk)}}
+		${pk}=<#noparse>#{</#noparse>${func.convertUnderLine(pk)}<#noparse>}</#noparse>
 	</update>
 	<#if sub?exists && sub==true>
 	<#assign foreignKeyVar=func.convertUnderLine(foreignKey)>

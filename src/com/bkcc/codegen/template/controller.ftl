@@ -24,6 +24,8 @@ import com.hebei.core.web.controller.BaseController;
 import io.swagger.annotations.Api;
 import com.hebei.${system}.${package}.data.${class};
 import io.swagger.annotations.ApiOperation;
+import java.util.Date;
+
 /**
  * 
  <#if vars.company?exists>
@@ -56,9 +58,11 @@ public class ${class}Controller extends BaseController {
 	@ApiOperation(value = "保存/更新")
 	@PostMapping()
 	public  ResultView save(${class} ${classVar}) {
-		ResultView ResultView=new ResultView(); 
+		ResultView ResultView=new ResultView();
+		${classVar}.setUpdateTime(new Date());
 		if(${classVar}.get${pkVar?cap_first}()==null||${classVar}.get${pkVar?cap_first}()<=0){
-			${classVar}.set${pkVar?cap_first}(UniqueIdUtil.genId()); 
+			${classVar}.set${pkVar?cap_first}(UniqueIdUtil.genId());
+			${classVar}.setCreateTime(new Date());
 			${classVar}Service.add(${classVar});
 		}else{
 			${classVar}Service.update(${classVar});
