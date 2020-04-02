@@ -11,11 +11,7 @@
 package com.hebei.${system}.${package};
 
 import javax.annotation.Resource;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import com.hebei.core.model.PageBean;
 import com.hebei.core.model.ResultView;
 import com.hebei.core.util.UniqueIdUtil;
@@ -45,19 +41,19 @@ public class ${class}Controller extends BaseController {
 
 	@ApiOperation(value = "列表查询")
 	@GetMapping("/list")
-	public ResultView list(PageBean PageBean,${class} ${classVar}) {		
+	public ResultView<${class}> list(PageBean PageBean,${class} ${classVar}) {
 		return ${classVar}Service.getAll(PageBean, ${classVar});
 	}
 
     @ApiOperation(value = "根据主键查询详情")
 	@GetMapping()
-    public ResultView get(Long ${pkVar}) {
+    public ResultView<${class}> get(Long ${pkVar}) {
     	return ResultView.ok(${classVar}Service.getById(${pkVar}));
     }
 
 	@ApiOperation(value = "保存/更新")
 	@PostMapping()
-	public  ResultView save(${class} ${classVar}) {
+	public ResultView save(${class} ${classVar}) {
 		ResultView ResultView=new ResultView();
 		${classVar}.setUpdateTime(new Date());
 		if(${classVar}.get${pkVar?cap_first}()==null||${classVar}.get${pkVar?cap_first}()<=0){
