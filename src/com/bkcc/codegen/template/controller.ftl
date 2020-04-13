@@ -41,8 +41,8 @@ public class ${class}Controller extends BaseController {
 
 	@ApiOperation(value = "列表查询")
 	@GetMapping("/list")
-	public ResultView<${class}> list(PageBean PageBean,${class} ${classVar}) {
-		return ${classVar}Service.getAll(PageBean, ${classVar});
+	public ResultView<${class}> list(PageBean pageBean,${class} ${classVar}) {
+		return ${classVar}Service.getAll(pageBean, ${classVar});
 	}
 
     @ApiOperation(value = "根据主键查询详情")
